@@ -291,7 +291,7 @@ Estamos interesados en hospedarnos desde el ${fechaEntrada} hasta el ${fechaSali
               />
             </a>
             <a
-              href="https://www.tiktok.com/@departamento_en_salina"
+              href="https://www.tiktok.com/@la_casa_de_fiorella"
               target="_blank"
               rel="noopener noreferrer"
               className="transition-transform duration-300 hover:scale-110 focus:outline-none"

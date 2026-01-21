@@ -1,4 +1,4 @@
-"use client"
+﻿"use client"
 
 import { useEffect, useState } from "react";
 
@@ -6,6 +6,7 @@ export default function Home() {
   const [fechaEntrada, setFechaEntrada] = useState("");
   const [fechaSalida, setFechaSalida] = useState("");
   const [personas, setPersonas] = useState("");
+  const [whatsAppError, setWhatsAppError] = useState("");
   const [heroIndex, setHeroIndex] = useState(0);
   const [lightboxImage, setLightboxImage] = useState<string | null>(null);
   const [galleryLightboxImage, setGalleryLightboxImage] = useState<string | null>(null);
@@ -53,21 +54,33 @@ export default function Home() {
   }, [lightboxImage]);
 
   const handleWhatsAppClick = () => {
-    const phone = "593999999999";
-    const message = `Hola, somos ${personas} personas y queremos hospedarnos del ${fechaEntrada} al ${fechaSalida}. \u00bfTienes disponibilidad?`;
+    if (!fechaEntrada || !fechaSalida || !personas) {
+      setWhatsAppError("Por favor completa las fechas y el número de personas.");
+      return;
+    }
+
+    const phone = "593993424558";
+    const message = `Hola, quisiera consultar la disponibilidad en La Casa de Fiorella.
+
+Estamos interesados en hospedarnos desde el ${fechaEntrada} hasta el ${fechaSalida} y seríamos ${personas} personas.
+
+¿Tendrían disponibilidad en esas fechas?`;
     const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+    setWhatsAppError("");
     window.open(url, "_blank");
   };
 
   return (
     <main className="min-h-screen bg-[#f6f1e9] text-slate-800 antialiased">
-      
+
       {/* Header */}
-      <header className="w-full border-b border-[#d8d1c5]">
-        <div className="mx-auto flex w-full max-w-5xl items-center px-6 py-5">
-          <h1 className="text-base font-semibold tracking-tight text-[#3f4a3a] md:text-lg">
-            La Casa de Fiorella
-          </h1>
+      <header className="w-full border-b border-[#d8d1c5] bg-white">
+        <div className="mx-auto flex w-full max-w-5xl items-center px-6 py-4">
+          <img
+            src="/images/lacasadefiorellaOK.jpg"
+            alt="La Casa de Fiorella"
+            className="h-20 w-auto object-contain"
+          />
         </div>
       </header>
 
@@ -79,9 +92,8 @@ export default function Home() {
               key={image}
               src={image}
               alt=""
-              className={`absolute inset-0 h-full w-full cursor-pointer object-cover transition-opacity duration-1000 ease-in-out ${
-                index === heroIndex ? "opacity-100" : "opacity-0"
-              }`}
+              className={`absolute inset-0 h-full w-full cursor-pointer object-cover transition-opacity duration-1000 ease-in-out ${index === heroIndex ? "opacity-100" : "opacity-0"
+                }`}
               onClick={() => setLightboxImage(image)}
             />
           ))}
@@ -146,13 +158,13 @@ export default function Home() {
       )}
 
       {/* La Casa */}
-      <section id="disponibilidad" className="scroll-mt-24 border-t border-transparent bg-[linear-gradient(to_right,transparent,rgba(0,0,0,0.08),transparent)] bg-[length:100%_1px] bg-[position:top_left] bg-no-repeat px-6 py-16 md:py-24">
+      <section className="scroll-mt-24 border-t border-transparent bg-[linear-gradient(to_right,transparent,rgba(0,0,0,0.08),transparent)] bg-[length:100%_1px] bg-[position:top_left] bg-no-repeat px-6 py-16 md:py-24">
         <div className="mx-auto max-w-5xl">
           <h3 className="text-2xl font-semibold tracking-tight text-[#3f4a3a] md:text-3xl">
             La Casa
           </h3>
           <p className="mt-4 max-w-2xl text-base leading-relaxed text-slate-700 md:text-lg">
-            Descripcion de la casa.
+            Casa acogedora con piscina, ideal para descansar en familia o con amigos. Está cerca del mar y en una zona tranquila de Salinas, con espacios amplios y todas las comodidades necesarias para una estadía cómoda y privada.
           </p>
         </div>
       </section>
@@ -192,7 +204,7 @@ export default function Home() {
       </section>
 
       {/* Disponibilidad */}
-      <section className="border-t border-transparent bg-[linear-gradient(to_right,transparent,rgba(0,0,0,0.08),transparent)] bg-[length:100%_1px] bg-[position:top_left] bg-no-repeat px-6 py-16 md:py-24">
+      <section id="disponibilidad" className="border-t border-transparent bg-[linear-gradient(to_right,transparent,rgba(0,0,0,0.08),transparent)] bg-[length:100%_1px] bg-[position:top_left] bg-no-repeat px-6 py-16 md:py-24">
         <div className="mx-auto max-w-5xl">
           <h3 className="text-2xl font-semibold tracking-tight text-[#3f4a3a] md:text-3xl">
             Disponibilidad
@@ -207,7 +219,10 @@ export default function Home() {
                   id="fecha-entrada"
                   type="date"
                   value={fechaEntrada}
-                  onChange={(event) => setFechaEntrada(event.target.value)}
+                  onChange={(event) => {
+                    setFechaEntrada(event.target.value);
+                    setWhatsAppError("");
+                  }}
                   className="w-full rounded-sm border border-[#cfc7bb] bg-white px-3 py-2 text-slate-800 focus:border-[#8b947f] focus:outline-none"
                 />
               </div>
@@ -219,20 +234,26 @@ export default function Home() {
                   id="fecha-salida"
                   type="date"
                   value={fechaSalida}
-                  onChange={(event) => setFechaSalida(event.target.value)}
+                  onChange={(event) => {
+                    setFechaSalida(event.target.value);
+                    setWhatsAppError("");
+                  }}
                   className="w-full rounded-sm border border-[#cfc7bb] bg-white px-3 py-2 text-slate-800 focus:border-[#8b947f] focus:outline-none"
                 />
               </div>
               <div className="flex flex-col gap-2">
                 <label className="text-sm text-slate-600" htmlFor="personas">
-                  Numero de personas
+                  Número de personas
                 </label>
                 <input
                   id="personas"
                   type="number"
                   min="1"
                   value={personas}
-                  onChange={(event) => setPersonas(event.target.value)}
+                  onChange={(event) => {
+                    setPersonas(event.target.value);
+                    setWhatsAppError("");
+                  }}
                   className="w-full rounded-sm border border-[#cfc7bb] bg-white px-3 py-2 text-slate-800 focus:border-[#8b947f] focus:outline-none"
                 />
               </div>
@@ -244,32 +265,35 @@ export default function Home() {
             >
               Consultar disponibilidad por WhatsApp
             </button>
+            {whatsAppError && (
+              <p className="mt-2 text-xs text-rose-600">{whatsAppError}</p>
+            )}
             <p className="mt-2 text-xs text-slate-500">
-              Respuesta r\u00e1pida \u00b7 Atenci\u00f3n directa \u00b7 Sin intermediarios
+              Respuesta rápida · Atención directa · Sin intermediarios
             </p>
           </div>
         </div>
       </section>
 
-      {/* Ubicacion */}
+      {/* Ubicación */}
       <section className="border-t border-transparent bg-[linear-gradient(to_right,transparent,rgba(0,0,0,0.08),transparent)] bg-[length:100%_1px] bg-[position:top_left] bg-no-repeat px-6 py-16 md:py-24">
         <div className="mx-auto max-w-5xl">
           <h3 className="text-2xl font-semibold tracking-tight text-[#3f4a3a] md:text-3xl">
-            Ubicacion
+            Ubicación
           </h3>
           <div className="mt-6 overflow-hidden rounded-md border border-[#d8d1c5] bg-white/70">
             <div className="relative h-64 w-full sm:h-80 lg:h-[420px]">
               <iframe
                 className="absolute inset-0 h-full w-full"
-                src="https://www.google.com/maps?q=-2.202338,-80.979256&z=15&output=embed"
+                src="https://www.google.com/maps?q=-2.202338,-80.979256&z=17&output=embed"
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
-                title="Ubicacion aproximada"
+                title="Ubicación aproximada"
               />
             </div>
           </div>
           <p className="mt-4 text-sm text-slate-600">
-            Zona tranquila \u00b7 Ubicaci\u00f3n aproximada por privacidad
+            Zona tranquila · Ubicación aproximada por privacidad
           </p>
         </div>
       </section>
@@ -277,7 +301,7 @@ export default function Home() {
       {/* Footer */}
       <footer className="border-t border-transparent bg-[linear-gradient(to_right,transparent,rgba(0,0,0,0.08),transparent)] bg-[length:100%_1px] bg-[position:top_left] bg-no-repeat px-6 py-8 text-sm text-slate-600">
         <div className="mx-auto max-w-5xl">
-          Ac La Casa de Fiorella
+          © La Casa de Fiorella
         </div>
       </footer>
 

@@ -15,11 +15,11 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "La Casa de Fiorella | Tu descanso frente al mar",
   description:
-    "Departamento c\u00f3modo y elegante para tu descanso frente al mar. Consulta disponibilidad por WhatsApp.",
+    "Departamento cómodo y elegante para tu descanso frente al mar. Consulta disponibilidad por WhatsApp.",
   openGraph: {
     title: "La Casa de Fiorella | Tu descanso frente al mar",
     description:
-      "Departamento c\u00f3modo y elegante para tu descanso frente al mar. Consulta disponibilidad por WhatsApp.",
+      "Departamento cómodo y elegante para tu descanso frente al mar. Consulta disponibilidad por WhatsApp.",
     images: [
       {
         url: "/images/hero.jpeg",
@@ -34,7 +34,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="scroll-smooth">
+    <html lang="es" className="scroll-smooth">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >

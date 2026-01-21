@@ -272,6 +272,49 @@ Estamos interesados en hospedarnos desde el ${fechaEntrada} hasta el ${fechaSali
               Respuesta rápida · Atención directa · Sin intermediarios
             </p>
           </div>
+
+          {/* Redes Sociales */}
+          <h3 className="mt-10 text-2xl font-semibold tracking-tight text-[#3f4a3a] md:text-3xl">
+            Redes Sociales
+          </h3>
+          <div className="mt-8 flex flex-wrap items-center justify-start gap-6 md:gap-10">
+            <a
+              href="https://www.instagram.com/la_casa_de_fiorella?utm_source=qr"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="transition-transform duration-300 hover:scale-110 focus:outline-none"
+            >
+              <img
+                src="/images/instagramicon.png"
+                alt="Instagram"
+                className="h-12 w-12 object-contain"
+              />
+            </a>
+            <a
+              href="https://www.tiktok.com/@departamento_en_salina"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="transition-transform duration-300 hover:scale-110 focus:outline-none"
+            >
+              <img
+                src="/images/tiktokicon.png"
+                alt="TikTok"
+                className="h-12 w-12 object-contain"
+              />
+            </a>
+            <a
+              href="https://www.airbnb.com/rooms/1452135696889919950?source_impression_id=p3_1769032465_P3CjrFA58gVCLvJ1"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="transition-transform duration-300 hover:scale-110 focus:outline-none"
+            >
+              <img
+                src="/images/airbnbicon.png"
+                alt="Airbnb"
+                className="h-10 w-10 object-contain"
+              />
+            </a>
+          </div>
         </div>
       </section>
 

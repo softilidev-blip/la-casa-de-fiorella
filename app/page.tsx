@@ -10,6 +10,66 @@ export default function Home() {
   const [heroIndex, setHeroIndex] = useState(0);
   const [lightboxImage, setLightboxImage] = useState<string | null>(null);
   const [galleryLightboxImage, setGalleryLightboxImage] = useState<string | null>(null);
+  const [currentGalleryIndex, setCurrentGalleryIndex] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  // Array de todas las imágenes de la galería (47 fotos)
+  const galleryImages = [
+    "/images/casa-1.jpeg",
+    "/images/casa-2.jpeg",
+    "/images/casa-3.jpeg",
+    "/images/casa-4.jpeg",
+    "/images/casa-5.jpeg",
+    "/images/casa-6.jpeg",
+    "/images/casa-7.jpeg",
+    "/images/casa-8.jpeg",
+    "/images/casa-9.jpeg",
+    "/images/casa-10.jpeg",
+    "/images/casa-11.jpeg",
+    "/images/casa-12.jpeg",
+    "/images/casa-13.jpeg",
+    "/images/casa-14.jpeg",
+    "/images/casa-15.jpeg",
+    "/images/casa-16.jpeg",
+    "/images/casa-17.jpeg",
+    "/images/casa-18.jpeg",
+    "/images/casa-19.jpeg",
+    "/images/casa-20.jpeg",
+    "/images/casa-21.jpeg",
+    "/images/casa-22.jpeg",
+    "/images/casa-23.jpeg",
+    "/images/casa-24.jpeg",
+    "/images/casa-25.jpeg",
+    "/images/casa-26.jpeg",
+    "/images/casa-27.jpeg",
+    "/images/casa-28.jpeg",
+    "/images/casa-29.jpeg",
+    "/images/casa-30.jpeg",
+    "/images/casa-31.jpeg",
+    "/images/casa-32.jpeg",
+    "/images/casa-33.jpeg",
+    "/images/casa-34.jpeg",
+    "/images/casa-35.jpeg",
+    "/images/casa-36.jpeg",
+    "/images/casa-37.jpeg",
+    "/images/casa-38.jpeg",
+    "/images/casa-39.jpeg",
+    "/images/casa-40.jpeg",
+    "/images/casa-41.jpeg",
+    "/images/casa-42.jpeg",
+    "/images/casa-43.jpeg",
+    "/images/casa-44.jpeg",
+    "/images/casa-45.jpeg",
+    "/images/casa-46.jpeg",
+    "/images/casa-47.jpeg",
+  ];
+
+  // Configuración de paginación
+  const photosPerPage = 24;
+  const totalPages = Math.ceil(galleryImages.length / photosPerPage);
+  const startIndex = (currentPage - 1) * photosPerPage;
+  const endIndex = startIndex + photosPerPage;
+  const currentPhotos = galleryImages.slice(startIndex, endIndex);
 
   const heroImages = [
     "/images/casa-1.jpeg",
@@ -52,6 +112,44 @@ export default function Home() {
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [lightboxImage]);
+
+  // useEffect para navegación con teclado en la galería
+  useEffect(() => {
+    if (!galleryLightboxImage) {
+      return;
+    }
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setGalleryLightboxImage(null);
+      } else if (event.key === "ArrowLeft") {
+        navigatePrevious();
+      } else if (event.key === "ArrowRight") {
+        navigateNext();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [galleryLightboxImage, currentGalleryIndex]);
+
+  const navigateNext = () => {
+    const nextIndex = (currentGalleryIndex + 1) % galleryImages.length;
+    setCurrentGalleryIndex(nextIndex);
+    setGalleryLightboxImage(galleryImages[nextIndex]);
+  };
+
+  const navigatePrevious = () => {
+    const prevIndex = (currentGalleryIndex - 1 + galleryImages.length) % galleryImages.length;
+    setCurrentGalleryIndex(prevIndex);
+    setGalleryLightboxImage(galleryImages[prevIndex]);
+  };
+
+  const openGalleryLightbox = (imagePath: string) => {
+    const index = galleryImages.indexOf(imagePath);
+    setCurrentGalleryIndex(index);
+    setGalleryLightboxImage(imagePath);
+  };
 
   const handleWhatsAppClick = () => {
     if (!fechaEntrada || !fechaSalida || !personas) {
@@ -135,24 +233,66 @@ Estamos interesados en hospedarnos desde el ${fechaEntrada} hasta el ${fechaSali
       )}
       {galleryLightboxImage && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/90"
           onClick={() => setGalleryLightboxImage(null)}
         >
-          <div className="relative max-h-[90vh] max-w-[95vw]">
+          {/* Botón anterior (izquierda) - Fijo en desktop */}
+          <button
+            type="button"
+            className="absolute left-2 top-1/2 z-10 -translate-y-1/2 rounded-full bg-white/30 p-2 text-black transition-all hover:bg-white/50 hover:scale-110 md:fixed md:left-8 md:p-3"
+            onClick={(e) => {
+              e.stopPropagation();
+              navigatePrevious();
+            }}
+            aria-label="Foto anterior"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-5 h-5 md:w-7 md:h-7">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+            </svg>
+          </button>
+
+          {/* Botón siguiente (derecha) - Fijo en desktop */}
+          <button
+            type="button"
+            className="absolute right-2 top-1/2 z-10 -translate-y-1/2 rounded-full bg-white/30 p-2 text-black transition-all hover:bg-white/50 hover:scale-110 md:fixed md:right-8 md:p-3"
+            onClick={(e) => {
+              e.stopPropagation();
+              navigateNext();
+            }}
+            aria-label="Foto siguiente"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-5 h-5 md:w-7 md:h-7">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+            </svg>
+          </button>
+
+          {/* Contenedor de la imagen */}
+          <div className="relative max-h-[90vh] max-w-[95vw] md:max-w-[70vw]">
+            {/* Botón cerrar */}
             <button
               type="button"
-              className="absolute right-3 top-3 rounded-full bg-black/60 px-2 py-1 text-xs font-semibold text-white/90"
-              onClick={() => setGalleryLightboxImage(null)}
+              className="absolute right-3 top-3 z-10 rounded-full bg-black/60 px-2 py-1 text-xs font-semibold text-white/90 transition-all hover:bg-black/80"
+              onClick={(e) => {
+                e.stopPropagation();
+                setGalleryLightboxImage(null);
+              }}
               aria-label="Cerrar"
             >
               ×
             </button>
+
+            {/* Imagen */}
             <img
               src={galleryLightboxImage}
               alt=""
-              className="max-h-[90vh] max-w-[95vw] rounded-md object-contain"
+              className="max-h-[90vh] max-w-[95vw] rounded-md object-contain md:max-w-[70vw]"
               onClick={(event) => event.stopPropagation()}
             />
+
+            {/* Indicador de posición */}
+            <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 rounded-full bg-black/60 px-3 py-1 text-xs text-white/90 md:bottom-3">
+              {currentGalleryIndex + 1} / {galleryImages.length}
+            </div>
           </div>
         </div>
       )}
@@ -172,33 +312,48 @@ Estamos interesados en hospedarnos desde el ${fechaEntrada} hasta el ${fechaSali
       {/* Fotos */}
       <section className="border-t border-transparent bg-[linear-gradient(to_right,transparent,rgba(0,0,0,0.08),transparent)] bg-[length:100%_1px] bg-[position:top_left] bg-no-repeat px-6 py-16 md:py-24">
         <div className="mx-auto max-w-5xl">
-          <h3 className="text-2xl font-semibold tracking-tight text-[#3f4a3a] md:text-3xl">
-            Fotos
-          </h3>
+          {/* Header con título y paginador */}
+          <div className="flex items-center justify-between">
+            <h3 className="text-2xl font-semibold tracking-tight text-[#3f4a3a] md:text-3xl">
+              Fotos
+            </h3>
+
+            {/* Paginador */}
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                disabled={currentPage === 1}
+                className="rounded-sm bg-[#3f4a3a] px-3 py-1.5 text-xs font-semibold text-[#f6f1e9] transition duration-300 ease-out hover:-translate-y-px hover:bg-[#475242] hover:shadow-sm disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:translate-y-0"
+              >
+                Anterior
+              </button>
+              <span className="text-sm text-slate-600">
+                {currentPage} / {totalPages}
+              </span>
+              <button
+                onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                disabled={currentPage === totalPages}
+                className="rounded-sm bg-[#3f4a3a] px-3 py-1.5 text-xs font-semibold text-[#f6f1e9] transition duration-300 ease-out hover:-translate-y-px hover:bg-[#475242] hover:shadow-sm disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:translate-y-0"
+              >
+                Siguiente
+              </button>
+            </div>
+          </div>
+
+          {/* Grid de fotos dinámico */}
           <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            <img src="/images/casa-1.jpeg" alt="Casa 1" className="h-56 w-full cursor-pointer rounded-md object-cover transition-transform duration-300 ease-out hover:scale-[1.03] hover:shadow-md md:h-64" onClick={() => setGalleryLightboxImage("/images/casa-1.jpeg")} />
-            <img src="/images/casa-2.jpeg" alt="Casa 2" className="h-56 w-full cursor-pointer rounded-md object-cover transition-transform duration-300 ease-out hover:scale-[1.03] hover:shadow-md md:h-64" onClick={() => setGalleryLightboxImage("/images/casa-2.jpeg")} />
-            <img src="/images/casa-3.jpeg" alt="Casa 3" className="h-56 w-full cursor-pointer rounded-md object-cover transition-transform duration-300 ease-out hover:scale-[1.03] hover:shadow-md md:h-64" onClick={() => setGalleryLightboxImage("/images/casa-3.jpeg")} />
-            <img src="/images/casa-4.jpeg" alt="Casa 4" className="h-56 w-full cursor-pointer rounded-md object-cover transition-transform duration-300 ease-out hover:scale-[1.03] hover:shadow-md md:h-64" onClick={() => setGalleryLightboxImage("/images/casa-4.jpeg")} />
-            <img src="/images/casa-5.jpeg" alt="Casa 5" className="h-56 w-full cursor-pointer rounded-md object-cover transition-transform duration-300 ease-out hover:scale-[1.03] hover:shadow-md md:h-64" onClick={() => setGalleryLightboxImage("/images/casa-5.jpeg")} />
-            <img src="/images/casa-6.jpeg" alt="Casa 6" className="h-56 w-full cursor-pointer rounded-md object-cover transition-transform duration-300 ease-out hover:scale-[1.03] hover:shadow-md md:h-64" onClick={() => setGalleryLightboxImage("/images/casa-6.jpeg")} />
-            <img src="/images/casa-7.jpeg" alt="Casa 7" className="h-56 w-full cursor-pointer rounded-md object-cover transition-transform duration-300 ease-out hover:scale-[1.03] hover:shadow-md md:h-64" onClick={() => setGalleryLightboxImage("/images/casa-7.jpeg")} />
-            <img src="/images/casa-8.jpeg" alt="Casa 8" className="h-56 w-full cursor-pointer rounded-md object-cover transition-transform duration-300 ease-out hover:scale-[1.03] hover:shadow-md md:h-64" onClick={() => setGalleryLightboxImage("/images/casa-8.jpeg")} />
-            <img src="/images/casa-9.jpeg" alt="Casa 9" className="h-56 w-full cursor-pointer rounded-md object-cover transition-transform duration-300 ease-out hover:scale-[1.03] hover:shadow-md md:h-64" onClick={() => setGalleryLightboxImage("/images/casa-9.jpeg")} />
-            <img src="/images/casa-10.jpeg" alt="Casa 10" className="h-56 w-full cursor-pointer rounded-md object-cover transition-transform duration-300 ease-out hover:scale-[1.03] hover:shadow-md md:h-64" onClick={() => setGalleryLightboxImage("/images/casa-10.jpeg")} />
-            <img src="/images/casa-11.jpeg" alt="Casa 11" className="h-56 w-full cursor-pointer rounded-md object-cover transition-transform duration-300 ease-out hover:scale-[1.03] hover:shadow-md md:h-64" onClick={() => setGalleryLightboxImage("/images/casa-11.jpeg")} />
-            <img src="/images/casa-12.jpeg" alt="Casa 12" className="h-56 w-full cursor-pointer rounded-md object-cover transition-transform duration-300 ease-out hover:scale-[1.03] hover:shadow-md md:h-64" onClick={() => setGalleryLightboxImage("/images/casa-12.jpeg")} />
-            <img src="/images/casa-13.jpeg" alt="Casa 13" className="h-56 w-full cursor-pointer rounded-md object-cover transition-transform duration-300 ease-out hover:scale-[1.03] hover:shadow-md md:h-64" onClick={() => setGalleryLightboxImage("/images/casa-13.jpeg")} />
-            <img src="/images/casa-14.jpeg" alt="Casa 14" className="h-56 w-full cursor-pointer rounded-md object-cover transition-transform duration-300 ease-out hover:scale-[1.03] hover:shadow-md md:h-64" onClick={() => setGalleryLightboxImage("/images/casa-14.jpeg")} />
-            <img src="/images/casa-15.jpeg" alt="Casa 15" className="h-56 w-full cursor-pointer rounded-md object-cover transition-transform duration-300 ease-out hover:scale-[1.03] hover:shadow-md md:h-64" onClick={() => setGalleryLightboxImage("/images/casa-15.jpeg")} />
-            <img src="/images/casa-16.jpeg" alt="Casa 16" className="h-56 w-full cursor-pointer rounded-md object-cover transition-transform duration-300 ease-out hover:scale-[1.03] hover:shadow-md md:h-64" onClick={() => setGalleryLightboxImage("/images/casa-16.jpeg")} />
-            <img src="/images/casa-17.jpeg" alt="Casa 17" className="h-56 w-full cursor-pointer rounded-md object-cover transition-transform duration-300 ease-out hover:scale-[1.03] hover:shadow-md md:h-64" onClick={() => setGalleryLightboxImage("/images/casa-17.jpeg")} />
-            <img src="/images/casa-19.jpeg" alt="Casa 19" className="h-56 w-full cursor-pointer rounded-md object-cover transition-transform duration-300 ease-out hover:scale-[1.03] hover:shadow-md md:h-64" onClick={() => setGalleryLightboxImage("/images/casa-19.jpeg")} />
-            <img src="/images/casa-20.jpeg" alt="Casa 20" className="h-56 w-full cursor-pointer rounded-md object-cover transition-transform duration-300 ease-out hover:scale-[1.03] hover:shadow-md md:h-64" onClick={() => setGalleryLightboxImage("/images/casa-20.jpeg")} />
-            <img src="/images/casa-21.jpeg" alt="Casa 21" className="h-56 w-full cursor-pointer rounded-md object-cover transition-transform duration-300 ease-out hover:scale-[1.03] hover:shadow-md md:h-64" onClick={() => setGalleryLightboxImage("/images/casa-21.jpeg")} />
-            <img src="/images/casa-22.jpeg" alt="Casa 22" className="h-56 w-full cursor-pointer rounded-md object-cover transition-transform duration-300 ease-out hover:scale-[1.03] hover:shadow-md md:h-64" onClick={() => setGalleryLightboxImage("/images/casa-22.jpeg")} />
-            <img src="/images/casa-23.jpeg" alt="Casa 23" className="h-56 w-full cursor-pointer rounded-md object-cover transition-transform duration-300 ease-out hover:scale-[1.03] hover:shadow-md md:h-64" onClick={() => setGalleryLightboxImage("/images/casa-23.jpeg")} />
-            <img src="/images/casa-24.jpeg" alt="Casa 24" className="h-56 w-full cursor-pointer rounded-md object-cover transition-transform duration-300 ease-out hover:scale-[1.03] hover:shadow-md md:h-64" onClick={() => setGalleryLightboxImage("/images/casa-24.jpeg")} />
+            {currentPhotos.map((photo, index) => {
+              const photoNumber = startIndex + index + 1;
+              return (
+                <img
+                  key={photo}
+                  src={photo}
+                  alt={`Casa ${photoNumber}`}
+                  className="h-56 w-full cursor-pointer rounded-md object-cover transition-transform duration-300 ease-out hover:scale-[1.03] hover:shadow-md md:h-64"
+                  onClick={() => openGalleryLightbox(photo)}
+                />
+              );
+            })}
           </div>
         </div>
       </section>
